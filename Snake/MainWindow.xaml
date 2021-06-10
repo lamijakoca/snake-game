@@ -11,7 +11,7 @@
         KeyDown="keyDown"
         Loaded="Window_Loaded">
     <Canvas 
-        Name="CanvasMap" 
+        Name="main" 
         Background="Black">
 
     </Canvas>

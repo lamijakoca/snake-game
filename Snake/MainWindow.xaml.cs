@@ -18,7 +18,7 @@ namespace Snake
         Point snake;
         Point food;
         int stepX, stepY, width, height;
-        const int size = 20;
+        int size = 20;
         int total = 100;
         int length = 1;
         int points = 0;
@@ -29,8 +29,8 @@ namespace Snake
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            width = (int)CanvasMap.ActualWidth;
-            height = (int)CanvasMap.ActualHeight;
+            width = (int)main.ActualWidth;
+            height = (int)main.ActualHeight;
             random = new Random();
             timer = new DispatcherTimer();
             timer.Tick += GameRun;
@@ -50,9 +50,11 @@ namespace Snake
             snake.X += stepX * 3;
             snake.Y += stepY * 3;
             Ellipse ellipse = createFoodOrSnake(snake, Brushes.Red);
-            if(CanvasMap.Children.Count > length)
-                CanvasMap.Children.RemoveAt(length);
-            CanvasMap.Children.Insert(1, ellipse);
+            if(main.Children.Count > length)
+            {
+                main.Children.RemoveAt(length);
+            }
+            main.Children.Insert(1, ellipse);
         }
         private void GameRun(object sender, EventArgs e)
         {
@@ -62,11 +64,11 @@ namespace Snake
                 MessageBox.Show("Game over :(", "Loser");
                 Close();
             }
-            else if (isCross(snake, food))
+            else if (isEaten(snake, food))
             {
                 if (++points == total)
                 {
-                    CanvasMap.Children.RemoveAt(0);
+                    main.Children.RemoveAt(0);
                     MessageBox.Show("You win", "Winner");
                     Close();
                 }
@@ -106,11 +108,6 @@ namespace Snake
                     }
             }
         }
-        private bool isCross(Point a, Point b)
-        {
-            return (Math.Abs(a.X - b.X)) < size && (Math.Abs(a.Y - b.Y)) < size;
-        }
-       
         private Ellipse createFoodOrSnake(Point point, Brush brush)
         {
             Ellipse ellipse = new Ellipse();
@@ -125,10 +122,16 @@ namespace Snake
         {
             food = new Point(random.Next(width - size), random.Next(height - size));
             Ellipse ellipse = createFoodOrSnake(food, Brushes.White);
-            if (CanvasMap.Children.Count > 0)
-                CanvasMap.Children.RemoveAt(0);
-            CanvasMap.Children.Insert(0, ellipse);
+            if (main.Children.Count > 0)
+            {
+                main.Children.RemoveAt(0);
+            }
+            main.Children.Insert(0, ellipse);
             length++;
+        }
+        private bool isEaten(Point a, Point b)
+        {
+            return (Math.Abs(a.X - b.X)) < size && (Math.Abs(a.Y - b.Y)) < size;
         }
         private bool outOfScreen(Point point)
         {
